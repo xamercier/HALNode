@@ -1,0 +1,69 @@
+																CORRECTED VERSION.
+				
+				
+HAL: Heuristically programmed ALgorithmic (HAL 9000 lol... Fiction character...)
+
+A basic explanation of HAL: 
+
+						   HAL:
+						   HAL is a system designed to automatically start Minecraft servers depending on the demand so for example if you have
+						   200 players all wanting to play the same game if you have a standard server where you have a predefined number of a
+						   the certain type of server they can't all play this game. That's when HAL comes in HAL will start just the right number
+						   of servers depending on how much you need you don't need to make predefined numbers of servers HAL will automatically
+						   create and start servers from a single template.
+
+						   Redis: 
+						   HAL use a redis server wich is use to send messages between different systems. In HAL we use this system to make the
+						   comunication between the different parts of HAL (NODE,BUNGEE,SPIGOT).
+						   
+						   Node:
+						   The node is the heart of the HAL system. The node is responsible for the start/stop server part it's the one copying
+						   the template server into the server folder when it does that it also changes the port of the server so that we don't
+						   use an already used port. It then sends the register command to the bungeecord plugin. The node will also automatically
+						   detect when a server has crashed or has stopped, will delete it from the server folder and will send the unregister
+						   command to the bungeecord plugin. 
+						   
+						   Bungee: 
+						   Bungeecord is the system that let us connect multiples Minecraft servers together (So that the player can simply 
+						   jump between servers without disconnecting and reconnecting each time (What we call a Minecraft server is in reality
+						   hundreds and hundreds of Minecraft servers connected together usually with bungeecord server) bungeecord needs the
+						   servers to be registered in its configuration file but we created HAL so that we don't have to create a predefine 
+						   numbers of servers. (So that we can optimize the resources of our server) so we created the HAL plugin for bungeecord 
+						   the HAL plugin is responsible for the commands part (Right now HAL does not create servers automatically) so that the
+						   players can start and stop server as they need and for the register/unregister parts on the bungeecord. So when a
+						   player execute the start/stop server command the bungeecord HALL plugin will send this command on the Redis server 
+						   this command will contain the information that the node/spigot need to stop/start a server.
+						   
+						   Spigot:
+						   The HAL spigot plugin is the part of the system that is directly on the server and can interact directly interact with
+						   the server. It is like all the others parts of HAL connected to the Redis server. Its only utility is to stop the server
+						   when the stop command is executed on the Redis server.
+														
+															DIAGRAM OF HAL COMUNICATION SYSTEM
+Spigot:
+		Utility: Stopping servers
+		Redis listening utility: To stop the server that it's on
+		Redis sending utility: None
+		Commands: None
+
+Bungee:
+		Utility: To register/unregister servers and player interface
+		Redis listening utility: To register/unregister server
+		Redis sending utility: To start servers/stop servers
+		Commands: Start/Stop server commands and help command (Show the list of commands)
+
+Node:
+		Utility: Starting/stopping the servers and send register/unregister commands
+		Redis listening utility: To start servers
+		Redis sending utility: To register/unregister servers
+		Commands: None
+
+Start Server:
+
+				1:Bungee: Send Start Command		2:Node: Start Server and send Register Command			3:Bungee: Register Server
+
+Stop Server:
+
+				1:Bungee: Send Stop Command		2:Spigot: Stop itself 		3:Node: Detects server is down and send unregister command
+				4:Bungee: Unregister Server
+				

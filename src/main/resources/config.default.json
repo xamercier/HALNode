@@ -1,0 +1,15 @@
+{
+  "HALServer": {
+    "port": 12
+  },
+
+  "serverDirectory": "/var/servers/",
+
+  "servers": {
+    "uhc": {
+      "prefix": "uhc_",
+      "templateDir": "/var/template/uhc/",
+      "startScript": "start.sh"
+    }
+  }
+}
